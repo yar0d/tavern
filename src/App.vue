@@ -54,7 +54,7 @@
     </aside>
   </div>
 
-  <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content items-center px-4">
+  <footer class="footer sm:footer-horizontal bg-primary text-primary-content items-center px-4">
     <aside class="grid-flow-col items-center">
       <Icon icon="material-symbols-light:tag" size="x-large" />
       <p>Copyright © {{ new Date().getFullYear() }} - All right reserved</p>

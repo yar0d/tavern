@@ -1,5 +1,5 @@
 <template>
-  <Icon :icon="`${icon}`" class="text-2xl md:text-6xl self-center" :class="disabled ? 'text-secondary' : 'text-primary clickable'" v-bind="$attrs" />
+  <Icon :icon="`${icon}`" class="text-2xl md:text-6xl self-center" :class="disabled ? 'text-neutral' : 'clickable'" v-bind="$attrs" />
 </template>
 
 <script>

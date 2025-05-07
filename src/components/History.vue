@@ -10,7 +10,16 @@
       <ul class="list">
         <li v-for="item in history" :key="item.timestamp" class="list-row p-0 px-1 pb-1 m-0">
           <div class="text-sm">{{ $d(item.timestamp, isBeforeToday(item.timestamp) ? 'long' : 'time') }}</div>
-          <div :class="getStyles(item)">{{ item.text }}</div>
+          <div :class="getStyles(item)">
+            {{ item.text }}
+          </div>
+          <div v-if="item?.sets" class="flex">
+            <template v-for="(set, index) in item.sets" :key="`set-${index}`">
+              <div v-for="(roll, idx) in set?.rolls" :key="`roll-${index}-${idx}`" class="badge badge-outline badge-xs">
+                {{ roll.value }}
+              </div>
+            </template>
+          </div>
         </li>
       </ul>
     </div>
