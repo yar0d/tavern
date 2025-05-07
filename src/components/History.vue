@@ -43,7 +43,7 @@ export default {
       })
     },
     addDiceRoll (results) {
-      this.add(results, { text: this.$t("Rolled {formula}: {total}", results) })
+      this.add(results, { text: this.$t("Rolled {notation}= {total}", results) })
     },
     addInfo (items) {
       this.add(items, { info: true })

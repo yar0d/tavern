@@ -92,7 +92,8 @@ export default {
   "Roll a group of PC": "Créer un groupe de personnages",
   "Roll from class by kindred table (see Adventuring Parties, DMB page 108)": "Lancer sur la table des classes par Peuple (voir Groupes d'Aventuriers, DMB page 108)",
   "Clear": "Effacer",
+  "Roll": "Lancer",
   "History": "Historique",
   "Welcome to the OSR Tavern!": "Bienvenue dans la Taverne Old School !",
-  "Rolled {formula}: {total}": "Tirage de {formula} : {total}",
+  "Rolled {notation}= {total}": "Tirage de {notation} = {total}",
 }

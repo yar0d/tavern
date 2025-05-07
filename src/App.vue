@@ -18,7 +18,7 @@
     </main>
 
     <aside class="glass bg-base-200 md:w-1/3 lg:w-1/4 p-2 rounded-box shadow-md">
-      <div class="flex">
+      <div class="flex align-center">
         <dice-button formula="d4" faces="4" :disabled="isRolling" @click="roll('1d4')" />
         <dice-button formula="d6" faces="6" :disabled="isRolling" @click="roll('1d6')" />
         <dice-button formula="d8" faces="8" :disabled="isRolling" @click="roll('1d8')" />
@@ -29,18 +29,24 @@
           {{ $t('Clear') }}
         </button>
       </div>
+      <div>
+        <input v-model="formula" type="text" placeholder="dice formula" class="input" />
+        <button class="btn" @click="roll(formula)">
+          {{ $t('Roll') }}
+        </button>
+      </div>
 
-      Liste des PJ ouverts
+      <br>Liste des PJ ouverts
 
-      Liens vers les SRD
-      - OSR
-      - Dolmenwood
+      <br>Liens vers les SRD
+      <br>- OSR
+      <br>- Dolmenwood
 
-      Outils pour le SOLO
-      - oracle
-      - prise de notes markdown
-      - gestion fichiers
-      - générateurs à foison
+      <br>Outils pour le SOLO
+      <br>- oracle
+      <br>- prise de notes markdown
+      <br>- gestion fichiers
+      <br>- générateurs à foison
 
       <div>
         <history ref="history-panel"/>
@@ -86,6 +92,7 @@ export default {
   data () {
     return {
       diceCanvasResizeHandler: null,
+      formula: "1d100+1d10",
       isRolling: false,
     }
   },
@@ -98,6 +105,7 @@ export default {
   },
   async mounted () {
     this.$refs["history-panel"].add(await this.appStore.init())
+    this.$refs["history-panel"].addInfo(this.$t("Welcome to the OSR Tavern!"))
 
     // Hook an event handler to capture window resizing and adjust virtual table height
     if (this.diceCanvasResizeHandler)
@@ -118,7 +126,7 @@ export default {
       color_spotlight: 0xefdfd5,
       shadows: true,
       theme_surface: "default",
-      sound_dieMaterial: "metal",
+      sound_dieMaterial: "plastic",
       theme_customColorset: null,
       theme_colorset: "white", // see available colorsets in https://github.com/3d-dice/dice-box-threejs/blob/main/src/const/colorsets.js
       theme_texture: "noise", // see available textures in https://github.com/3d-dice/dice-box-threejs/blob/main/src/const/texturelist.js
@@ -133,7 +141,7 @@ export default {
         setTimeout(() => {
           this.isRolling = false
         //   box.clearDice()
-        }, 500)
+        }, 250)
         /* Example:
           {
             "notation": "3d6",
@@ -183,8 +191,6 @@ export default {
     //     }, 1000)
     //   })
     //   .catch((e) => console.error(e))
-
-    this.$refs["history-panel"].addInfo(this.$t("Welcome to the OSR Tavern!"))
   },
   methods: {
     changeTheme () {

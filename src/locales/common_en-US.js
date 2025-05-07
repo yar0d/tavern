@@ -92,7 +92,8 @@ export default {
   "Roll a group of PC": "Roll a group of PC",
   "Roll from class by kindred table (see Adventuring Parties, DMB page 108)": "Roll from class by kindred table (see Adventuring Parties, DMB page 108)",
   "Clear": "Clear",
+  "Roll": "Roll",
   "History": "History",
   "Welcome to the OSR Tavern!": "Welcome to the OSR Tavern!",
-  "Rolled {formula}: {total}": "Rolled {formula}: {total}",
+  "Rolled {notation}= {total}": "Rolled {notation}= {total}",
 }
