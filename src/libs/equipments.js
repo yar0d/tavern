@@ -1,0 +1,17 @@
+export const ARMOUR_ANY = "AR-ANY"
+export const ARMOUR_NONE = "AR-NON"
+export const ARMOUR_LIGHT = "AR-LIT"
+export const ARMOUR_MEDIUM = "AR-MED"
+export const ARMOUR_HEAVY = "AR-HVY"
+
+export const SHIELD_ANY = "SHD-ANY"
+export const SHIELD_NONE = "SHD-NON"
+
+export const WEAPON_ANY = "WPN-ANY"
+export const WEAPON_SMALL = "WPN-SML"
+export const WEAPON_MEDIUM = "WPN-MED"
+export const WEAPON_MELEE = "WPN-MEL"
+export const WEAPON_DAGGER = "WPN-DAG"
+export const WEAPON_CLUB = "WPN-CLU"
+export const WEAPON_SLING = "WPN-SLING"
+export const WEAPON_STAFF = "WPN-STF"

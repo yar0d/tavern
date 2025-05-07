@@ -1,5 +1,13 @@
-# campfire
-An companion app for players of OSR role playing games.
+# Tavern
+An companion app for players of OSR role playing games. You have a library to store all your characters from OSR and Dolmenwood.
+You can also roll dices, takes some notes.
+
+## Folders
+
+Application configuration is stored in "/home/daniel/.config/osr.tavern"
+
+Your personal data are saved in directory :
+/home/daniel/Documents
 
 # Vue 3 + Vite
 
