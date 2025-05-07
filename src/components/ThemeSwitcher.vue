@@ -1,24 +1,41 @@
 <template>
   <label class="swap swap-rotate">
     <!-- this hidden checkbox controls the state -->
-    <input type="checkbox" value="dolmenwood-dark" class="theme-controller" />
+    <input v-model="dark" type="checkbox" :value="theme" class="theme-controller" @change="switchTheme" />
     <Icon icon="material-symbols-light:light-mode-outline" class="swap-on h-10 w-10 fill-current" />
     <Icon icon="material-symbols-light:dark-mode-outline" class="swap-off h-10 w-10 fill-current" />
   </label>
 </template>
 
 <script>
+import { mapStores } from "pinia"
+
+import { useAppStore } from "@/stores"
+import { THEME_DARK, THEME_LIGHT } from "@/libs/themes"
+
 export default {
   name: "ThemeSwitcher",
   data () {
-    return {}
+    return {
+      theme: "dolmenwood-dark",
+      dark: false,
+    }
   },
   computed: {
+    ...mapStores(useAppStore),
   },
-  watch: {},
-  created () {},
-  beforeUnmount () {},
-  mounted () {},
-  methods: {},
+  methods: {
+    save () {
+
+    },
+    switchTheme () {
+      if (this.dark) this.theme = THEME_DARK
+      else this.theme = THEME_LIGHT
+      console.log("## saveTheme", this.dark, this.theme)
+      this.appStore.saveConfig({
+        theme: this.dark,
+      })
+    },
+  },
 }
 </script>

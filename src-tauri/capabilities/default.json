@@ -7,9 +7,20 @@
   ],
   "permissions": [
     "core:default",
-    "fs:default",
     {
       "identifier": "fs:scope",
+      "allow": [{ "path": "$CONFIG/*" }, { "path": "$DOCUMENT/*" }]
+    },
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$CONFIG/*" }, { "path": "$DOCUMENT/*" }]
+    },
+    {
+      "identifier": "fs:allow-app-read",
+      "allow": [{ "path": "$CONFIG/*" }, { "path": "$DOCUMENT/*" }]
+    },
+    {
+      "identifier": "fs:allow-app-write",
       "allow": [{ "path": "$CONFIG/*" }, { "path": "$DOCUMENT/*" }]
     }
   ]

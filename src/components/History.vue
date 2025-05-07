@@ -4,6 +4,7 @@
     <div class="collapse-title font-semibold">
       {{ $t('History') }}
       <span v-if="history?.length" class="badge badge-sm badge-primary ml-1">{{ history?.length }}</span>
+      [TOUT] | [tirages]
     </div>
 
     <div class="collapse-content text-sm">
@@ -31,12 +32,13 @@ import _forEach from "lodash-es/forEach"
 import _isArray from "lodash-es/isArray"
 import _isObject from "lodash-es/isObject"
 
-import dates from "../libs/dates"
+import dates from "@/libs/dates"
 
 export default {
   name: "History",
   data () {
     return {
+      TYPE_DICE: "dice",
       expanded: true,
       history: [],
     }
@@ -52,7 +54,7 @@ export default {
       })
     },
     addDiceRoll (results) {
-      this.add(results, { text: this.$t("Rolled {notation}= {total}", results) })
+      this.add(results, { text: this.$t("Rolled {notation}= {total}", { ...results, type: this.TYPE_DICE }) })
     },
     addInfo (items) {
       this.add(items, { info: true })

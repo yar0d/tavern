@@ -74,10 +74,10 @@ import { mapStores } from "pinia"
 
 import DiceBox from "@3d-dice/dice-box-threejs"
 
-import { useAppStore } from "./stores"
-import DiceButton from "./components/DiceButton.vue"
-import ThemeSwitcher from "./components/ThemeSwitcher.vue"
-import History from "./components/History.vue"
+import { useAppStore } from "@/stores"
+import DiceButton from "@/components/DiceButton.vue"
+import ThemeSwitcher from "@/components/ThemeSwitcher.vue"
+import History from "@/components/History.vue"
 
 let box = null
 
