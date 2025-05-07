@@ -1,6 +1,6 @@
 # Tavern
-An companion app for players of OSR role playing games. You have a library to store all your characters from OSR and Dolmenwood.
-You can also roll dices, takes some notes.
+A companion app for players of OSR role playing games. You have a library to store all your characters from OSR and Dolmenwood.
+You can also roll dices, takes some notes and solo gaming too!
 
 ## Folders
 
