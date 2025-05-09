@@ -89,11 +89,45 @@
 }
 
 .debug {
-  border: 4px red dashed;
+  border: 2px red dashed;
 }
 
 .transparent {
-  background-color: None !important;
+  background-color: None;
+}
+
+.blurred {
+  background-color: None;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.blurred-contrast {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.blurred-contrast[dark=true] {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.blurred-contrast[dark=false] {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+#app {
+  background-image: url(./assets/tavern-background.jpg);
+  background-repeat: no-repeat;
+  /* background-size: 40%; */
+  background-size: cover;
+  background-attachment: fixed;
+  /* background-position-x: right;
+  background-position-y: bottom; */
+  background-clip: border-box;
+  width: 100%;
+}
+
+.above-all {
+  z-index: 4000;
 }
 
 .dice3d-canvas {
@@ -101,9 +135,8 @@
   top: 0;
   left: 0;
   z-index: 2000; /* Above all */
-  backdrop-filter: blur(8px);
   /* background-color: transparent; */
-  background-color: #00000050;
+  background-color: #00000020;
 }
 
 .iconify[size=x-small] {

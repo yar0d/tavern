@@ -1,11 +1,12 @@
 <template>
-  <Icon :icon="`${icon}`" class="text-2xl md:text-6xl self-center" :class="disabled ? 'text-neutral' : 'clickable'" v-bind="$attrs" />
+  <Icon :icon="`${icon}`" class="text-2xl md:text-6xl self-center" :class="disabled ? 'text-neutral' : `clickable ${color}`" v-bind="$attrs" />
 </template>
 
 <script>
 export default {
   name: "DiceButton",
   props: {
+    color: { type: String, default: "text-primary-content" },
     disabled: { type: Boolean, default: false },
     faces: { type: [Number, String], default: 9 },
     formula: { type: String, default: "d20" },

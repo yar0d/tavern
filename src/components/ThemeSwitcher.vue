@@ -17,23 +17,23 @@ export default {
   name: "ThemeSwitcher",
   data () {
     return {
-      theme: "dolmenwood-dark",
+      theme: THEME_DARK,
       dark: false,
     }
   },
   computed: {
     ...mapStores(useAppStore),
   },
+  mounted () {
+    this.dark = this.appStore.themeConfig.dark
+  },
   methods: {
-    save () {
-
-    },
     switchTheme () {
       if (this.dark) this.theme = THEME_DARK
       else this.theme = THEME_LIGHT
-      console.log("## saveTheme", this.dark, this.theme)
-      this.appStore.saveConfig({
-        theme: this.dark,
+      this.appStore.saveTheme({
+        dark: this.dark,
+        name: this.theme,
       })
     },
   },
