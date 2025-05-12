@@ -1,3 +1,4 @@
+/* eslint-disable vue/component-definition-name-casing */
 import { createApp } from "vue"
 import { createI18n } from "vue-i18n"
 import { createPinia } from "pinia"
@@ -8,6 +9,8 @@ import messages from "./locales"
 import { datetimeFormats, numberFormats } from "./locales/formats"
 
 import { Icon } from "@iconify/vue"
+
+import TextInput from "./components/dui/TextInput.vue"
 
 const i18n = createI18n({
   // something vue-i18n options here ...
@@ -28,5 +31,7 @@ app.use(pinia)
 
 // eslint-disable-next-line vue/multi-word-component-names
 app.component("Icon", Icon)
+
+app.component("dui-text-input", TextInput)
 
 app.mount("#app")

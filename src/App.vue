@@ -16,28 +16,46 @@
       <main class="md:w-2/3 lg:w-3/4 px-5 py-40">
       </main>
 
-      <aside class="md:w-1/3 lg:w-1/4 px-5 py-40" :dark="isDark">
-        <div class="flex align-center">
+      <aside class="md:w-1/3 lg:w-1/4 px-5 py-40">
+        <div class="flex content-center">
           <dice-button formula="d4" faces="4" :disabled="isRolling" @click="roll('1d4')" />
           <dice-button formula="d6" faces="6" :disabled="isRolling" @click="roll('1d6')" />
           <dice-button formula="d8" faces="8" :disabled="isRolling" @click="roll('1d8')" />
           <dice-button formula="d10" faces="10" :disabled="isRolling" @click="roll('1d10')" />
           <dice-button formula="d12" faces="12" :disabled="isRolling" @click="roll('1d12')" />
           <dice-button formula="d20" faces="20" :disabled="isRolling" @click="roll('1d20')" />
+
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-xl text-primary-content btn-link m-1">
+              <Icon icon="fluent:more-vertical-48-regular" />
+            </div>
+            <ul tabindex="0" class="blurred blurred-contrast dropdown-content menu rounded-box z-1 w-52 p-2 shadow-sm" :dark="isDark">
+              <div class="flex">
+                <dui-text-input v-model="formula" :label="$t('Dice formula')" :append-button="$t('Roll')" @click="rollFormula(formula)" />
+              </div>
+              <li v-for="f in favoriteFormula" :key="f">
+                <button class="btn btn-small" @click="roll(f)">
+                  {{ f }}
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <input v-model="formula" type="text" placeholder="dice formula" class="input" />
-          <button class="btn" @click="roll(formula)">
-            {{ $t('Roll') }}
-          </button>
-        </div>
-        <div>
+
+        <div class="pt-4">
           <history ref="history-panel"/>
         </div>
       </aside>
+
+      <div class="toast toast-center toast-top">
+        <div v-for="(notification, index) in notifications" :key="index" role="alert" :class="NOTIFICATION_CLASSES[notification.type]" class="flex">
+          <span>{{ notification.message }}</span>
+          <Icon icon="fluent:delete-48-regular" class="NOTIFICATION_CLASSES[notification.type]" @click.prevent="notifyStore.removeNotification(notification)"/>
+        </div>
+      </div>
     </div>
 
-    <footer class="mt-auto p-2">
+    <footer class="mt-auto p-2 flex">
       <h1 class="text-sm md:text-md text-primary-content">
         Copyright © {{ new Date().getFullYear() }} - All right reserved
       </h1>
@@ -48,7 +66,7 @@
 <script>
 import _debounce from "lodash-es/debounce"
 
-import { mapStores } from "pinia"
+import { mapState, mapStores } from "pinia"
 
 import DiceBox from "@3d-dice/dice-box-threejs"
 
@@ -56,6 +74,7 @@ import { useAppStore } from "@/stores"
 import DiceButton from "@/components/DiceButton.vue"
 import ThemeSwitcher from "@/components/ThemeSwitcher.vue"
 import History from "@/components/History.vue"
+import useNotifyStore, { NOTIFICATION_CLASSES, NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_INFO, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_WARNING } from "./stores/notifications"
 
 let box = null
 
@@ -69,13 +88,17 @@ export default {
   emits: ["update:modelValue"],
   data () {
     return {
+      NOTIFICATION_CLASSES,
       diceCanvasResizeHandler: null,
+      error: null,
       formula: "1d100+1d10",
+      favoriteFormula: [],
       isRolling: true, // Mandatory to initialise 3D context
     }
   },
   computed: {
-    ...mapStores(useAppStore),
+    ...mapStores(useAppStore, useNotifyStore),
+    ...mapState(useNotifyStore, ["notifications"]),
     isDark () {
       return this.appStore.themeConfig.dark
     },
@@ -141,7 +164,10 @@ export default {
         .then(() => {
           this.isRolling = false
         })
-        .catch((error) => console.error(error))
+        .catch((error) => {
+          console.error(error)
+          this.error = error
+        })
 
       // await box.initialize()
       //   .then(() => {
@@ -152,12 +178,21 @@ export default {
       //     }, 1000)
       //   })
       //   .catch((e) => console.error(e))
+      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_INFO)
+      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_SUCCESS)
+      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_WARNING)
+      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_ERROR)
     },
     roll (formula) {
       this.isRolling = true
       this.$nextTick(() => {
         box.roll(formula)
       })
+    },
+    rollFormula (formula) {
+      if (!this.favoriteFormula.includes(formula))
+        this.favoriteFormula.unshift(formula)
+      this.roll(formula)
     },
     setDiceCanvasSize: _debounce(function () {
       this.isRolling = true

@@ -30,6 +30,7 @@ export default [
     files: ["**/*.vue"],
     rules: {
       "vue/block-order": ["error", { order: ["template", "script", "style"] }],
+      "vue/component-definition-name-casing": ["error", "PascalCase"],
       "vue/component-options-name-casing": ["error", "kebab-case"],
       "vue/custom-event-name-casing": ["error", "kebab-case"],
       "vue/first-attribute-linebreak": ["error", { "singleline": "beside", "multiline": "beside" }],

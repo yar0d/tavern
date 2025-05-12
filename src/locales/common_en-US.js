@@ -96,4 +96,5 @@ export default {
   "History": "History",
   "Welcome to the OSR Tavern!": "Welcome to the OSR Tavern!",
   "Rolled {notation}= {total}": "Rolled {notation}= {total}",
+  "Dice formula": "Dice formula",
 }

@@ -96,4 +96,5 @@ export default {
   "History": "Historique",
   "Welcome to the OSR Tavern!": "Bienvenue dans la Taverne Old School !",
   "Rolled {notation}= {total}": "Tirage de {notation} = {total}",
+  "Dice formula": "Formulae de dés",
 }
