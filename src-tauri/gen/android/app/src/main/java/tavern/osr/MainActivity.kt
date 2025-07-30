@@ -1,3 +1,3 @@
-package com.tauri.dev
+package tavern.osr
 
 class MainActivity : TauriActivity()

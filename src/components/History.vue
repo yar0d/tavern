@@ -1,5 +1,5 @@
 <template>
-  <div class="collapse collapse-arrow bg-base-100 border-base-300 border">
+  <div class="collapse collapse-arrow">
     <input v-model="expanded" type="checkbox" />
     <div class="collapse-title font-semibold">
       {{ $t('History') }}
@@ -28,11 +28,10 @@
 </template>
 
 <script>
-import _forEach from "lodash-es/forEach"
-import _isArray from "lodash-es/isArray"
-import _isObject from "lodash-es/isObject"
-
 import dates from "@/libs/dates"
+
+import { mapState, mapStores } from "pinia"
+import { useHistoryStore } from "@/stores/history"
 
 export default {
   name: "History",
@@ -40,25 +39,13 @@ export default {
     return {
       TYPE_DICE: "dice",
       expanded: true,
-      history: [],
     }
   },
+  computed: {
+    ...mapStores(useHistoryStore),
+    ...mapState(useHistoryStore, ["history"]),
+  },
   methods: {
-    add (items, attributes = {}) {
-      _forEach(_isArray(items) ? items : [items], item => {
-        let line
-        if (_isObject(item)) line={ ...item, ...attributes }
-        else line = { text: item, ...attributes }
-        line.timestamp = new Date()
-        this.history.unshift(line)
-      })
-    },
-    addDiceRoll (results) {
-      this.add(results, { text: this.$t("Rolled {notation}= {total}", { ...results, type: this.TYPE_DICE }) })
-    },
-    addInfo (items) {
-      this.add(items, { info: true })
-    },
     getStyles (item) {
       if (item.error) {
         return "text-error"

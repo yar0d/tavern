@@ -1,5 +1,5 @@
 <template>
-  <Icon :icon="`${icon}`" class="text-2xl md:text-6xl self-center" :class="disabled ? 'text-neutral' : `clickable ${color}`" v-bind="$attrs" />
+  <Icon :icon="`${icon}`" :class="cls" v-bind="$attrs" />
 </template>
 
 <script>
@@ -10,12 +10,19 @@ export default {
     disabled: { type: Boolean, default: false },
     faces: { type: [Number, String], default: 9 },
     formula: { type: String, default: "d20" },
+    size: { type: String, default: "3xl" },
   },
   emits: ["roll-begin", "roll-end"],
   data () {
     return {}
   },
   computed: {
+    cls () {
+      let cls = `self-center text-${this.size}`
+      if (this.disabled) cls += " text-neutral"
+      else cls +=` clickable ${this.color}`
+      return cls
+    },
     icon () {
       switch (this.faces) {
         case 4, "4":

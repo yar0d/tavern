@@ -2,10 +2,9 @@ import { defineStore } from "pinia"
 
 import { path } from "@tauri-apps/api"
 import { getName } from "@tauri-apps/api/app"
-import { BaseDirectory, exists, mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs"
+import { BaseDirectory, exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs"
 
-import { THEME_DARK } from "@/libs/themes"
-import { THEME_LIGHT } from "../libs/themes"
+import { THEME_DARK, THEME_LIGHT } from "@/libs/themes"
 
 const CONFIG_FILE_VERSION = 1
 const CONFIG_FILE_NAME = "app-conf.json"
@@ -24,15 +23,16 @@ export const useAppStore = defineStore("app", {
       dark: false,
       theme: THEME_DARK,
     },
-    appName: "tavern",
-    configDir: null,
+    appName: null,
+    baseDir: null,
     documentDir: null,
     language: null,
-    pathNameConfig: null,
-    pathNameHistory: null,
+    pathNameConfig: CONFIG_FILE_NAME,
+    pathNameHistory: HISTORY_FILE_NAME,
     standAlone: false,
   }),
   getters: {
+    applicationName: (state) => state.appName,
     config (state) { return state._config},
     prefersDarkTheme () {
       const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)")
@@ -56,74 +56,82 @@ export const useAppStore = defineStore("app", {
 
       try {
         this.language = navigator.language || navigator.userLanguage
+        this.appName = await getName()
+        this.baseDir = BaseDirectory.AppData
+        this.documentDir = await path.appDataDir()
+
+        messages.push(`[app] Starting ${this.appName}.`)
         messages.push(`[app] Language ${this.language}.`)
 
-        this.appName = await getName()
+        // this.documentDir = await path.join(this.documentDir, this.appName)
 
-        this.configDir = await path.appConfigDir()
+        // const dirExists = await exists(this.appName, { baseDir: this.baseDir })
+        // if (!dirExists) {
+        //   await mkdir(this.appName, { baseDir: this.baseDir })
+        //   messages.push(`[app] Created documents directory ${this.documentDir}.`)
+        // } else
+        messages.push(`[app] Using documents directory ${this.documentDir}.`)
 
-        this.documentDir = await path.documentDir()
-        this.documentDir += `/${this.appName}`
-
-        if (this.appName) {
-          let dirExists = await exists(this.appName, { baseDir: BaseDirectory.Document })
-          if (!dirExists) {
-            await mkdir(this.appName, { baseDir: BaseDirectory.Document })
-            messages.push(`[app] Created documents directory ${this.documentDir}.`)
-          } else
-            messages.push(`[app] Using documents directory ${this.documentDir}.`)
-
-          dirExists = await exists(this.appName, { baseDir: BaseDirectory.Config })
-          if (!dirExists){
-            await mkdir(this.appName, { baseDir: BaseDirectory.Config })
-            messages.push(`[app] Created config directory ${this.configDir}`)
-          } else
-            messages.push(`[app] Using config directory ${this.configDir}`)
-        }
-
-        this.pathNameConfig = await path.join(this.appName, CONFIG_FILE_NAME)
-        this.pathNameHistory = await path.join(this.appName, HISTORY_FILE_NAME)
+        // this.pathNameConfig = await path.join(this.appName, CONFIG_FILE_NAME)
+        // this.pathNameHistory = await path.join(this.appName, HISTORY_FILE_NAME)
 
         await this.loadConfig()
         this.applyTheme()
 
+        messages.push(`[app] History is saved in ${this.pathNameHistory}.`)
         messages.push("[app] Initialized as Tauri app.")
         this.standAlone = true
       } catch (error) {
         this.standAlone = false
         console.error(error)
+        messages.push(error)
         messages.push("[app] Failed initializing as Tauri app!")
       }
       return messages
     },
     async loadConfig () {
-      const fileExists = await exists(this.pathNameConfig, { baseDir: BaseDirectory.Config })
-      if (fileExists){
-        const newConfig = await readTextFile(this.pathNameConfig, { baseDir: BaseDirectory.Config })
-        try {
+      try {
+        const fileExists = await exists(this.pathNameConfig, { baseDir: this.baseDir })
+        if (fileExists) {
+          const newConfig = await readTextFile(this.pathNameConfig, { baseDir: this.baseDir })
           this._config = JSON.parse(newConfig || "{}")
-        } catch (error) {
-          console.error(`[loadConfig] Error parsing configuration from ${this.pathNameConfig}`, error)
         }
+        return this._config
+      } catch (error) {
+        console.error(`[loadConfig] Error parsing configuration from ${this.pathNameConfig}`, error)
       }
-      return this._config
     },
     async loadHistory () {
-      const fileExists = await exists(this.pathNameHistory, { baseDir: BaseDirectory.Document })
-      if (fileExists)
-        return await readTextFile(this.pathNameHistory, { baseDir: BaseDirectory.Config })
-      else
-        return []
+      try {
+        const fileExists = await exists(this.pathNameHistory, { baseDir: this.baseDir })
+        if (fileExists)
+          return await readTextFile(this.pathNameHistory, { baseDir: this.baseDir })
+        else
+          return []
+      } catch (error) {
+        console.error(`[loadHistory] Error parsing history from ${this.pathNameConfig}`, error)
+        throw error
+      }
     },
     async saveConfig (config) {
-      const newConfig = { ...this._config, ...config, version: CONFIG_FILE_VERSION }
-      await writeTextFile(this.pathNameConfig, JSON.stringify(newConfig), { baseDir: BaseDirectory.Config })
-      this._config = newConfig
-      return this._config
+      try {
+        const newConfig = { ...this._config, ...config, version: CONFIG_FILE_VERSION }
+        await writeTextFile(this.pathNameConfig, JSON.stringify(newConfig), { baseDir: this.baseDir })
+        this._config = newConfig
+        return this._config
+      } catch (error) {
+        console.error(`[saveConfig] Error saving ${this.pathNameConfig}`, error)
+        throw error
+      }
     },
     async saveHistory (history) {
-      await writeTextFile(this.pathNameHistory, JSON.stringify(history || []), { baseDir: BaseDirectory.Document })
-      return
+      try {
+        await writeTextFile(this.pathNameHistory, JSON.stringify(history || []), { baseDir: this.baseDir })
+        return
+      } catch (error) {
+        console.error(`[saveHistory] Error saving ${this.pathNameHistory}`, error)
+        throw error
+      }
     },
     async saveTheme (themeConfig) {
       await this.saveConfig({ [CONFIG_KEY_THEME]: themeConfig })

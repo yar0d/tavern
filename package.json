@@ -1,5 +1,5 @@
 {
-  "name": "tavern",
+  "name": "tavern.osr",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,8 +11,10 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build",
-    "tauri:build:debug": "ARCH=x86_64 NO_STRIP=true tauri build -- --debug"
+    "tauri:build": "NO_STRIP=true tauri build",
+    "tauri:build:android": "tauri android build",
+    "tauri:build:debug": "ARCH=x86_64 NO_STRIP=true tauri build -- --debug",
+    "tauri:run:android": "waydroid app install app-universal-release.apk && waydroid app launch tavern.osr"
   },
   "dependencies": {
     "@3d-dice/dice-box-threejs": "^0.0.12",
@@ -23,6 +25,7 @@
     "@tauri-apps/plugin-opener": "^2.2.6",
     "daisyui": "^5.0.28",
     "lodash-es": "^4.17.21",
+    "pdf-lib": "^1.17.1",
     "pinia": "^3.0.2",
     "tailwindcss": "^4.1.4",
     "vue": "^3.5.13",
@@ -33,10 +36,10 @@
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tauri-apps/cli": "^2.5.0",
-    "@vitejs/plugin-vue": "^5.2.2",
+    "@vitejs/plugin-vue": "^6.0.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "eslint": "^9.25.1",
     "eslint-plugin-vue": "^10.1.0",
-    "vite": "^6.3.1"
+    "vite": "^7.0.6"
   }
 }

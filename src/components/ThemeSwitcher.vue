@@ -2,8 +2,8 @@
   <label class="swap swap-rotate">
     <!-- this hidden checkbox controls the state -->
     <input v-model="dark" type="checkbox" :value="theme" class="theme-controller" @change="switchTheme" />
-    <Icon icon="material-symbols-light:light-mode-outline" class="swap-on h-10 w-10 fill-current" />
-    <Icon icon="material-symbols-light:dark-mode-outline" class="swap-off h-10 w-10 fill-current" />
+    <Icon icon="material-symbols:light-mode-outline" class="swap-on h-6 w-6 fill-current bg-red" />
+    <Icon icon="material-symbols:dark-mode-outline" class="swap-off h-6 w-6 fill-current" />
   </label>
 </template>
 

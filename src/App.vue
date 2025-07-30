@@ -1,103 +1,114 @@
 <template>
-  <div v-show="isRolling" id="dice-box" class="dice3d-canvas w-full h-full" />
-  <div class="blurred">
-    <header class="blurred-contrast p-2" :dark="isDark">
-      <div class="flex">
-        <!-- <h1 class="text-2xl md:text-4xl">Header</h1> -->
-        <Icon icon="game-icons:tavern-sign" class="text-warning text-2xl md:text-4xl self-center" />
-        <h1 class="flex-auto self-center text-primary-content text-xl md:text-2xl mx-2">
-          {{ $t('Welcome to the OSR Tavern!') }}
-        </h1>
-        <theme-switcher @change="changeTheme" />
-      </div>
-    </header>
-
-    <div class="my-5 w-full flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-      <main class="md:w-2/3 lg:w-3/4 px-5 py-40">
-      </main>
-
-      <aside class="md:w-1/3 lg:w-1/4 px-5 py-40">
-        <div class="flex content-center">
-          <dice-button formula="d4" faces="4" :disabled="isRolling" @click="roll('1d4')" />
-          <dice-button formula="d6" faces="6" :disabled="isRolling" @click="roll('1d6')" />
-          <dice-button formula="d8" faces="8" :disabled="isRolling" @click="roll('1d8')" />
-          <dice-button formula="d10" faces="10" :disabled="isRolling" @click="roll('1d10')" />
-          <dice-button formula="d12" faces="12" :disabled="isRolling" @click="roll('1d12')" />
-          <dice-button formula="d20" faces="20" :disabled="isRolling" @click="roll('1d20')" />
-
-          <div class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-xl text-primary-content btn-link m-1">
-              <Icon icon="fluent:more-vertical-48-regular" />
+  <div v-show="isRolling" id="dice-box" class="dice3d-canvas w-screen h-dvh" />
+  <div class="w-screen h-dvh">
+    <header :dark="isDark">
+      <div class="navbar blurred-contrast shadow-sm px-4 text-base-content">
+        <div class="flex-none">
+          <div class="drawer drawer-end">
+            <input id="app-drawer" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content">
+              <label for="app-drawer" class="text-2xl clickable">
+                <dui-icon icon="fluent:line-horizontal-3-48-regular" class="text-2xl" />
+              </label>
             </div>
-            <ul tabindex="0" class="blurred blurred-contrast dropdown-content menu rounded-box z-1 w-52 p-2 shadow-sm" :dark="isDark">
-              <div class="flex">
-                <dui-text-input v-model="formula" :label="$t('Dice formula')" :append-button="$t('Roll')" @click="rollFormula(formula)" />
+            <div class="drawer-side">
+              <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+              <div class="bg-base-300 text-base-content min-h-full w-auto max-w-1/2 p-4">
+                <div class="p-1 opacity-75 bg-base-100">
+                  <a href="https://oldschoolessentials.necroticgnome.com/srd/" target="_srd">
+                    {{ $t('SRD OSE') }}
+                  </a>
+                  |
+                  <a href="https://www.dolmenwood.necroticgnome.com/rules/" target="_srd">
+                    {{ $t('SRD Dolmenwood') }}
+                  </a>
+                </div>
+
+                <dui-history />
               </div>
-              <li v-for="f in favoriteFormula" :key="f">
-                <button class="btn btn-small" @click="roll(f)">
-                  {{ f }}
-                </button>
-              </li>
-            </ul>
+            </div>
           </div>
         </div>
 
-        <div class="pt-4">
-          <history ref="history-panel"/>
+        <div class="flex-1 capitalize text-xl flex">
+          <dui-icon icon="game-icons:tavern-sign" class="text-warning text-2xl mx-2" />
+          {{ applicationName }}
         </div>
-      </aside>
 
+        <div>
+          <button class="btn" @click="openCharacterSheet()">{{ $t('Load Character Sheet') }}</button>
+        </div>
+
+        <div v-if="diceBoxReady" class="flex-auto flex content-center">
+          <dui-dice-button formula="d4" faces="4" :disabled="isRolling" @click="roll('1d4')" />
+          <dui-dice-button formula="d6" faces="6" :disabled="isRolling" @click="roll('1d6')" />
+          <dui-dice-button formula="d8" faces="8" :disabled="isRolling" @click="roll('1d8')" />
+          <dui-dice-button formula="d10" faces="10" :disabled="isRolling" @click="roll('1d10')" />
+          <dui-dice-button formula="d12" faces="12" :disabled="isRolling" @click="roll('1d12')" />
+          <dui-dice-button formula="d20" faces="20" :disabled="isRolling" @click="roll('1d20')" />
+          <dui-modifier-input v-model="modifier" />
+        </div>
+
+        <div class="flex-none mr-2">
+          <dui-theme-switcher @change="changeTheme" />
+        </div>
+      </div>
+    </header>
+
+    <div class="my-5 w-full h-full flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
       <div class="toast toast-center toast-top">
         <div v-for="(notification, index) in notifications" :key="index" role="alert" :class="NOTIFICATION_CLASSES[notification.type]" class="flex">
           <span>{{ notification.message }}</span>
-          <Icon icon="fluent:delete-48-regular" class="NOTIFICATION_CLASSES[notification.type]" @click.prevent="notifyStore.removeNotification(notification)"/>
+          <dui-icon icon="fluent:delete-48-regular" class="NOTIFICATION_CLASSES[notification.type]" @click.prevent="notifyStore.removeNotification(notification)"/>
         </div>
       </div>
+
+      <main class="w-screen bg-base-100 opacity-50">
+        <character-sheet :ref="`character-sheet-0`" />
+      </main>
     </div>
 
-    <footer class="mt-auto p-2 flex">
+    <!-- <footer class="mt-auto p-2 flex">
       <h1 class="text-sm md:text-md text-primary-content">
         Copyright © {{ new Date().getFullYear() }} - All right reserved
       </h1>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
 <script>
 import _debounce from "lodash-es/debounce"
-
-import { mapState, mapStores } from "pinia"
-
 import DiceBox from "@3d-dice/dice-box-threejs"
 
+import { mapState, mapStores } from "pinia"
 import { useAppStore } from "@/stores"
-import DiceButton from "@/components/DiceButton.vue"
-import ThemeSwitcher from "@/components/ThemeSwitcher.vue"
-import History from "@/components/History.vue"
-import useNotifyStore, { NOTIFICATION_CLASSES, NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_INFO, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_WARNING } from "./stores/notifications"
+import { useHistoryStore } from "@/stores/history"
+import useNotifyStore, { NOTIFICATION_CLASSES } from "./stores/notifications"
+import CharacterSheet from "./components/CharacterSheet.vue"
 
 let box = null
 
 export default {
   name: "Tavern",
   components: {
-    "dice-button": DiceButton,
-    "history": History,
-    "theme-switcher": ThemeSwitcher,
+    "character-sheet": CharacterSheet,
   },
   emits: ["update:modelValue"],
   data () {
     return {
       NOTIFICATION_CLASSES,
+      diceBoxReady: false,
       diceCanvasResizeHandler: null,
       error: null,
       formula: "1d100+1d10",
       favoriteFormula: [],
       isRolling: true, // Mandatory to initialise 3D context
+      modifier: "0",
     }
   },
   computed: {
-    ...mapStores(useAppStore, useNotifyStore),
+    ...mapStores(useAppStore, useHistoryStore, useNotifyStore),
+    ...mapState(useAppStore, ["applicationName"]),
     ...mapState(useNotifyStore, ["notifications"]),
     isDark () {
       return this.appStore.themeConfig.dark
@@ -108,8 +119,8 @@ export default {
       window.removeEventListener("resize", this.diceCanvasResizeHandler)
   },
   async mounted () {
-    this.$refs["history-panel"].add(await this.appStore.init())
-    this.$refs["history-panel"].addInfo(this.$t("Welcome to the OSR Tavern!"))
+    this.historyStore.add(await this.appStore.init())
+    this.historyStore.addInfo(this.$t("Welcome to the OSR Tavern!"))
 
     // Hook an event handler to capture window resizing and adjust virtual table height
     if (this.diceCanvasResizeHandler)
@@ -149,24 +160,24 @@ export default {
         theme_material: "none", // "none" | "metal" | "wood" | "glass" | "plastic"
         gravity_multiplier: 400,
         light_intensity: 0.9,
-        baseScale: 100,
+        baseScale: 50,
         strength: 1, // toss strength of dice
         onRollComplete: (results) => {
-          console.log("## [dice-box]", results)
-          this.$refs["history-panel"].addDiceRoll(results)
-          setTimeout(() => {
-            this.isRolling = false
-            //   box.clearDice()
-          }, 250)
+          this.historyStore.addDiceRoll(results)
         },
       })
+
       box.initialize()
-        .then(() => {
-          this.isRolling = false
-        })
+        // .then(() => {
+        //   this.isRolling = false
+        // })
         .catch((error) => {
-          console.error(error)
-          this.error = error
+          console.error("[error] dice initialize" , error)
+          this.notifyStore.error(error)
+        })
+        .finally(() => {
+          this.isRolling = false
+          this.diceBoxReady = true
         })
 
       // await box.initialize()
@@ -178,15 +189,22 @@ export default {
       //     }, 1000)
       //   })
       //   .catch((e) => console.error(e))
-      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_INFO)
-      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_SUCCESS)
-      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_WARNING)
-      this.notifyStore.notify(this.$t("Welcome to the OSR Tavern!"), NOTIFICATION_TYPE_ERROR)
+      this.notifyStore.info(this.$t("Welcome to the OSR Tavern!"))
+    },
+    openCharacterSheet (characterId) {
+      if (!characterId) this.$refs["character-sheet-0"].createPdf()
     },
     roll (formula) {
       this.isRolling = true
       this.$nextTick(() => {
-        box.roll(formula)
+        box.roll(`${formula}${this.modifier || ""}`)
+          .catch ((error) =>{
+            console.error(`[error] roll ${formula}`, error)
+            this.notifyStore.error(error)
+          })
+          .finally(() => {
+            setTimeout(() => { this.isRolling = false }, 250)
+          })
       })
     },
     rollFormula (formula) {

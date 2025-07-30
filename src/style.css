@@ -6,7 +6,7 @@
   --color-euska-flag-red: oklch(0.57 0.2126 29.55);
   --color-euska-red: oklch(0.46 0.0786 29.06);
   --color-euska-flag-green: oklch(0.6 0.1668 149.57);
-  --color-euska-green: oklch(0.41 0.0424 170.39);
+  --color-euska-green: oklch(0.41 0.0424 170.39); /* #325247 */
   --color-dolmenwood-green: #65835c;
 }
 
@@ -84,6 +84,19 @@
   --noise: 0;
 }
 
+html, body {
+  background-color: var(--color-base-100);
+  height: 100% !important;
+}
+
+#app {
+  background-image: url(./assets/tavern-background.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-clip: border-box;
+}
+
 .clickable {
   cursor: pointer;
 }
@@ -112,18 +125,6 @@
 
 .blurred-contrast[dark=false] {
   background-color: rgba(255, 255, 255, 0.5);
-}
-
-#app {
-  background-image: url(./assets/tavern-background.jpg);
-  background-repeat: no-repeat;
-  /* background-size: 40%; */
-  background-size: cover;
-  background-attachment: fixed;
-  /* background-position-x: right;
-  background-position-y: bottom; */
-  background-clip: border-box;
-  width: 100%;
 }
 
 .above-all {

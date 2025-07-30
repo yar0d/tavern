@@ -1,6 +1,5 @@
 # Tavern
-A companion app for players of OSR role playing games. You have a library to store all your characters from OSR and Dolmenwood.
-You can also roll dices, takes some notes and solo gaming too!
+A companion app for players of OSR role playing games. You have a library to store all your characters from OSR and Dolmenwood. You can also roll dices, takes some notes and solo gaming too!
 
 ## Folders
 
@@ -26,3 +25,18 @@ Your personal data are saved in directory in `/home/daniel/Documents\tavern`
 
 ## May-be things
 - [ ] Gestion fichiers de l'appli
+
+# Development
+
+## Icons
+
+For **fonts**, Use only the following:
+- [Game Icons](https://github.com/game-icons/icons) from https://icon-sets.iconify.design/game-icons/?keyword=game
+
+
+# Building applications
+
+## Cannot build appImage - the workaround
+With **tauri@2.5.0** building appImage [fails](https://github.com/tauri-apps/tauri/issues/13258)!
+
+A [fix](https://github.com/tauri-apps/tauri/pull/13260/commits) is awaiting its release, we have à workaround with this build command line: `NO_STRIP=true ARCH=x86_64 yarn tauri build --verbose`.
