@@ -1,4 +1,4 @@
-import { ELF_NAME_COURTLY, ELF_NAME_RUSTIC } from "@/libs/languages"
+import { ELF_NAME_COURTLY, ELF_NAME_RUSTIC } from "@/libs/dolmenwood/languages"
 
 export default {
   [ELF_NAME_RUSTIC]: {

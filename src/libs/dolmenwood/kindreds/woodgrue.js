@@ -1,7 +1,7 @@
-import { Dices, d100, d20, rollFromObject, rollFromTable } from "../dices"
-import { SURNAME, SYLVAN, WOLDISH } from "../languages"
+import { Dices, d100, d20, rollFromObject, rollFromTable } from "@/libs/dices"
+import { SURNAME, SYLVAN, WOLDISH } from "@/libs/dolmenwood/languages"
 
-import NAMES from "../../locales/woodgrue_en-US"
+import NAMES from "@/locales/woodgrue_en-US"
 import { GENDER_FEMALE, GENDER_MALE, GENDER_UNISEX, KINDRED_HEIGHT_SMALL, KINDRED_TYPE_DEMI_FEY, KINDRED_WOODGRUE, Kindred } from "."
 
 const BACKGROUNDS = {

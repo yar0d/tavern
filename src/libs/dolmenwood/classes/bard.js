@@ -1,6 +1,6 @@
-import { COMBAT_APTITUDE_SEMI_MARTIAL } from "../abilities"
-import { ARMOUR_LIGHT, ARMOUR_MEDIUM, SHIELD_NONE, WEAPON_MEDIUM, WEAPON_SMALL } from "../equipments"
-import { d6 } from "../dices"
+import { COMBAT_APTITUDE_SEMI_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_LIGHT, ARMOUR_MEDIUM, SHIELD_NONE, WEAPON_MEDIUM, WEAPON_SMALL } from "@/libs/equipments"
+import { d6 } from "@/libs/dices"
 import { BARD_PRIME_ABILITIES, CLASS_BARD, Class } from "."
 
 export class Bard extends Class {

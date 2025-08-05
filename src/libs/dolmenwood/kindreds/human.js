@@ -1,5 +1,5 @@
-import { Dices, d100, rollFromObject, rollFromTable } from "../dices"
-import { SURNAME, WOLDISH } from "../languages"
+import { Dices, d100, rollFromObject, rollFromTable } from "@/libs/dices"
+import { SURNAME, WOLDISH } from "@/libs/dolmenwood/languages"
 import { GENDER_FEMALE, GENDER_MALE, GENDER_UNISEX, KINDRED_HEIGHT_MEDIUM, KINDRED_HUMAN, KINDRED_TYPE_MORTAL, Kindred } from "."
 
 import NAMES from "@/locales/human_en-US"

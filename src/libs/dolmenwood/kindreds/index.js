@@ -1,4 +1,4 @@
-import { d12, rollFromTable } from "../dices"
+import { d12, rollFromTable } from "../../dices"
 
 export const KINDRED_BREGGLE = "Breggle"
 export const KINDRED_ELF = "Elf"

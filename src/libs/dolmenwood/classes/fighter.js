@@ -1,6 +1,6 @@
-import { COMBAT_APTITUDE_MARTIAL } from "../abilities"
-import { ARMOUR_ANY, SHIELD_ANY, WEAPON_ANY } from "../equipments"
-import { d8 } from "../dices"
+import { COMBAT_APTITUDE_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_ANY, SHIELD_ANY, WEAPON_ANY } from "@/libs/equipments"
+import { d8 } from "@/libs/dices"
 import { CLASS_FIGHTER, Class, FIGHTER_PRIME_ABILITIES } from "."
 
 export class Fighter extends Class {

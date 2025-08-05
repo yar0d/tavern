@@ -1,6 +1,7 @@
-import _ from "lodash"
-import { d6, roll3d6, rollExplode } from "../libs/dices"
-import { getAbilityModifier } from "../libs/modifiers"
+import _ from "lodash-es"
+
+import { d6, roll3d6, rollExplode } from "@/libs/dices"
+import { getAbilityModifier } from "@/libs/modifiers"
 
 export const STR = "STR"
 export const INT = "INT"
@@ -61,7 +62,7 @@ export class Ability {
 
 export function createAbilities () {
   const result = {}
-  _.forEach(ABILITIES, (abbr) => {
+  _.forEach(ABILITIES,(abbr) => {
     result[abbr] = new Ability(abbr)
   })
   return result

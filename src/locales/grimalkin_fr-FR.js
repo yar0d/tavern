@@ -1,4 +1,4 @@
-import { FIRST_NAME, SURNAME } from "@/libs/languages"
+import { FIRST_NAME, SURNAME } from "@/libs/dolmenwood/languages"
 
 export default {
   [FIRST_NAME]: {

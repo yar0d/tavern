@@ -1,6 +1,6 @@
 <template>
   <div v-show="isRolling" id="dice-box" class="dice3d-canvas w-screen h-dvh" />
-  <div class="w-screen h-dvh">
+  <div class="size-auto">
     <header :dark="isDark">
       <div class="navbar blurred-contrast shadow-sm px-4 text-base-content">
         <div class="flex-none">
@@ -8,7 +8,7 @@
             <input id="app-drawer" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content">
               <label for="app-drawer" class="text-2xl clickable">
-                <dui-icon icon="fluent:line-horizontal-3-48-regular" class="text-2xl" />
+                <dui-icon icon="fluent:line-horizontal-3-32-regular" class="text-2xl" />
               </label>
             </div>
             <div class="drawer-side">
@@ -30,13 +30,13 @@
           </div>
         </div>
 
-        <div class="flex-1 capitalize text-xl flex">
+        <div class="flex-1 capitalize text-xl flex ">
           <dui-icon icon="game-icons:tavern-sign" class="text-warning text-2xl mx-2" />
           {{ applicationName }}
         </div>
 
         <div>
-          <button class="btn" @click="openCharacterSheet()">{{ $t('Load Character Sheet') }}</button>
+          <button class="btn" @click="createCharacter">{{ $t('Create a new character') }}</button>
         </div>
 
         <div v-if="diceBoxReady" class="flex-auto flex content-center">
@@ -49,8 +49,9 @@
           <dui-modifier-input v-model="modifier" />
         </div>
 
-        <div class="flex-none mr-2">
-          <dui-theme-switcher @change="changeTheme" />
+        <div class="ml-2 flex">
+          <dui-theme-switcher class="mr-2" @change="changeTheme" />
+          <dui-language-input />
         </div>
       </div>
     </header>
@@ -59,12 +60,37 @@
       <div class="toast toast-center toast-top">
         <div v-for="(notification, index) in notifications" :key="index" role="alert" :class="NOTIFICATION_CLASSES[notification.type]" class="flex">
           <span>{{ notification.message }}</span>
-          <dui-icon icon="fluent:delete-48-regular" class="NOTIFICATION_CLASSES[notification.type]" @click.prevent="notifyStore.removeNotification(notification)"/>
+          <dui-icon icon="fluent:delete-32-regular" class="NOTIFICATION_CLASSES[notification.type]" @click.prevent="notifyStore.removeNotification(notification)"/>
         </div>
       </div>
 
-      <main class="w-screen bg-base-100 opacity-50">
-        <character-sheet :ref="`character-sheet-0`" />
+      <main class="bg-base-100 size-auto">
+        <div class="flex w-full justify-start gap-2 py-2">
+          <a v-for="(pc, index) in characters" :key="index" :href="`#${pc.uuid}`" class="btn btn-xs">
+            <dui-icon icon="game-icons:character" class="text-info" />
+            {{ pc?.name }} {{ pc?.surname }}
+          </a>
+        </div>
+
+        <div class="carousel rounded-box content-start mx-8">
+          <template v-for="(pc, index) in characters" :key="index">
+            <div :id="pc.uuid" class="carousel-item w-full">
+              <dui-character-sheet :ref="`character-sheet-${index}`" :value="pc" />
+            </div>
+          </template>
+        </div>
+
+        <!-- <template v-for="(character, index) in characters" :key="index">
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 debug">
+            <input type="radio" name="character-accordion-2" :checked="index ? '' : 'checked'" />
+            <div></div>
+            <div class="collapse-content text-sm">
+              <character-sheet :ref="`character-sheet-${index}`" :value="character" />
+              {{ character }}
+            </div>
+          </div>
+        </template> -->
+
       </main>
     </div>
 
@@ -83,20 +109,19 @@ import DiceBox from "@3d-dice/dice-box-threejs"
 import { mapState, mapStores } from "pinia"
 import { useAppStore } from "@/stores"
 import { useHistoryStore } from "@/stores/history"
-import useNotifyStore, { NOTIFICATION_CLASSES } from "./stores/notifications"
-import CharacterSheet from "./components/CharacterSheet.vue"
+import useNotifyStore, { NOTIFICATION_CLASSES } from "@/stores/notifications"
+
+import CharacterDolmenwood, { register } from "@/libs/dolmenwood/character"
 
 let box = null
 
 export default {
   name: "Tavern",
-  components: {
-    "character-sheet": CharacterSheet,
-  },
   emits: ["update:modelValue"],
   data () {
     return {
       NOTIFICATION_CLASSES,
+      characters: [],
       diceBoxReady: false,
       diceCanvasResizeHandler: null,
       error: null,
@@ -134,6 +159,7 @@ export default {
     })
 
     this.initDiceBox()
+    register(this)
   },
   methods: {
     changeTheme () {
@@ -142,6 +168,11 @@ export default {
     clearDice () {
       box.clearDice()
       this.isRolling = false
+    },
+    createCharacter () {
+      const pc = new CharacterDolmenwood()
+      pc.rollFullFledged({ chooseBestClass: true })
+      this.characters.push(pc)
     },
     initDiceBox () {
       this.isRolling = true
@@ -190,9 +221,6 @@ export default {
       //   })
       //   .catch((e) => console.error(e))
       this.notifyStore.info(this.$t("Welcome to the OSR Tavern!"))
-    },
-    openCharacterSheet (characterId) {
-      if (!characterId) this.$refs["character-sheet-0"].createPdf()
     },
     roll (formula) {
       this.isRolling = true

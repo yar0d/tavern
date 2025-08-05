@@ -1,5 +1,5 @@
-import { GENDER_FEMALE, GENDER_MALE, GENDER_UNISEX } from "@/libs/kindreds"
-import { SURNAME } from "@/libs/languages"
+import { GENDER_FEMALE, GENDER_MALE, GENDER_UNISEX } from "@/libs/dolmenwood/kindreds"
+import { SURNAME } from "@/libs/dolmenwood/languages"
 
 export default {
   [GENDER_MALE]: {

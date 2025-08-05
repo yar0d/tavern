@@ -1,7 +1,7 @@
-import { COMBAT_APTITUDE_MARTIAL } from "../abilities"
-import { ARMOUR_HEAVY, ARMOUR_MEDIUM, SHIELD_ANY, WEAPON_MELEE } from "../equipments"
-import { KINDRED_BREGGLE, KINDRED_HUMAN } from "../kindreds"
-import { d8 } from "../dices"
+import { COMBAT_APTITUDE_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_HEAVY, ARMOUR_MEDIUM, SHIELD_ANY, WEAPON_MELEE } from "@/libs/equipments"
+import { KINDRED_BREGGLE, KINDRED_HUMAN } from "@/libs/dolmenwood/kindreds"
+import { d8 } from "@/libs/dices"
 import { CLASS_KNIGHT, Class, KNIGHT_PRIME_ABILITIES } from "."
 
 export class Knight extends Class {

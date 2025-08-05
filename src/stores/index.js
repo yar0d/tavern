@@ -4,10 +4,15 @@ import { path } from "@tauri-apps/api"
 import { getName } from "@tauri-apps/api/app"
 import { BaseDirectory, exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs"
 
+import storage from "@/libs/storage"
 import { THEME_DARK, THEME_LIGHT } from "@/libs/themes"
+import { LOCALES_COUNTRIES, LOCALE_DEFAULT, LOCALE_DEFAULT_COUNTRY } from "@/locales"
+import { LOCALE_NAMES } from "../locales"
 
 const CONFIG_FILE_VERSION = 1
 const CONFIG_FILE_NAME = "app-conf.json"
+const CONFIG_ROOT_NAME = "config"
+const CONFIG_KEY_HISTORY = "history"
 const CONFIG_KEY_THEME = "theme"
 
 const HISTORY_FILE_NAME = "history.json"
@@ -25,6 +30,7 @@ export const useAppStore = defineStore("app", {
     },
     appName: null,
     baseDir: null,
+    country: null,
     documentDir: null,
     language: null,
     pathNameConfig: CONFIG_FILE_NAME,
@@ -55,13 +61,16 @@ export const useAppStore = defineStore("app", {
       const messages = []
 
       try {
-        this.language = navigator.language || navigator.userLanguage
+        const navLang = navigator.language || navigator.userLanguage
+        this.country = LOCALES_COUNTRIES[navLang] || LOCALE_DEFAULT_COUNTRY
+        this.language = LOCALE_NAMES[navLang] ? navLang : LOCALE_DEFAULT
+
+        // eslint-disable-next-line no-console
+        console.log(`[app] Language ${this.country} / ${this.language}.`)
+
         this.appName = await getName()
         this.baseDir = BaseDirectory.AppData
         this.documentDir = await path.appDataDir()
-
-        messages.push(`[app] Starting ${this.appName}.`)
-        messages.push(`[app] Language ${this.language}.`)
 
         // this.documentDir = await path.join(this.documentDir, this.appName)
 
@@ -91,11 +100,20 @@ export const useAppStore = defineStore("app", {
     },
     async loadConfig () {
       try {
-        const fileExists = await exists(this.pathNameConfig, { baseDir: this.baseDir })
-        if (fileExists) {
-          const newConfig = await readTextFile(this.pathNameConfig, { baseDir: this.baseDir })
+        if (this.standAlone) {
+          const fileExists = await exists(this.pathNameConfig, { baseDir: this.baseDir })
+          if (fileExists) {
+            const newConfig = await readTextFile(this.pathNameConfig, { baseDir: this.baseDir })
+            this._config = JSON.parse(newConfig || "{}")
+          }
+        }
+        else {
+          const newConfig = storage.get(CONFIG_KEY_THEME, "{}")
           this._config = JSON.parse(newConfig || "{}")
         }
+
+        if (this._config.language) this.language = this._config.language
+
         return this._config
       } catch (error) {
         console.error(`[loadConfig] Error parsing configuration from ${this.pathNameConfig}`, error)
@@ -103,11 +121,16 @@ export const useAppStore = defineStore("app", {
     },
     async loadHistory () {
       try {
-        const fileExists = await exists(this.pathNameHistory, { baseDir: this.baseDir })
-        if (fileExists)
-          return await readTextFile(this.pathNameHistory, { baseDir: this.baseDir })
+        if (this.standAlone) {
+          const fileExists = await exists(this.pathNameHistory, { baseDir: this.baseDir })
+          if (fileExists) {
+            const history = await readTextFile(this.pathNameHistory, { baseDir: this.baseDir })
+            return JSON.parse(history || "[]")
+          }
+          else
+            return []}
         else
-          return []
+          return storage.get(CONFIG_KEY_HISTORY, [])
       } catch (error) {
         console.error(`[loadHistory] Error parsing history from ${this.pathNameConfig}`, error)
         throw error
@@ -116,7 +139,11 @@ export const useAppStore = defineStore("app", {
     async saveConfig (config) {
       try {
         const newConfig = { ...this._config, ...config, version: CONFIG_FILE_VERSION }
-        await writeTextFile(this.pathNameConfig, JSON.stringify(newConfig), { baseDir: this.baseDir })
+        if (this.standAlone)
+          await writeTextFile(this.pathNameConfig, JSON.stringify(newConfig), { baseDir: this.baseDir })
+        else
+          storage.set(CONFIG_ROOT_NAME, JSON.stringify(newConfig))
+
         this._config = newConfig
         return this._config
       } catch (error) {
@@ -126,8 +153,10 @@ export const useAppStore = defineStore("app", {
     },
     async saveHistory (history) {
       try {
-        await writeTextFile(this.pathNameHistory, JSON.stringify(history || []), { baseDir: this.baseDir })
-        return
+        if (this.standAlone)
+          await writeTextFile(this.pathNameHistory, JSON.stringify(history || []), { baseDir: this.baseDir })
+        else
+          storage.set(CONFIG_KEY_HISTORY, JSON.stringify(history || []))
       } catch (error) {
         console.error(`[saveHistory] Error saving ${this.pathNameHistory}`, error)
         throw error

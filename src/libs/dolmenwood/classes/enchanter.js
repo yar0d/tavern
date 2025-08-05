@@ -1,7 +1,7 @@
-import { COMBAT_APTITUDE_SEMI_MARTIAL } from "../abilities"
-import { ARMOUR_LIGHT, ARMOUR_MEDIUM, SHIELD_NONE, WEAPON_MEDIUM, WEAPON_SMALL } from "../equipments"
-import { KINDRED_TYPE_MORTAL } from "../kindreds"
-import { d6 } from "../dices"
+import { COMBAT_APTITUDE_SEMI_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_LIGHT, ARMOUR_MEDIUM, SHIELD_NONE, WEAPON_MEDIUM, WEAPON_SMALL } from "@/libs/equipments"
+import { KINDRED_TYPE_MORTAL } from "@/libs/dolmenwood/kindreds"
+import { d6 } from "@/libs/dices"
 import { CLASS_ENCHANTER, Class, ENCHANTER_PRIME_ABILITIES } from "."
 
 export class Enchanter extends Class {

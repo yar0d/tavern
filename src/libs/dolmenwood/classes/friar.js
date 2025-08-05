@@ -1,7 +1,7 @@
-import { COMBAT_APTITUDE_NON_MARTIAL } from "../abilities"
-import { ARMOUR_NONE, WEAPON_CLUB, WEAPON_DAGGER, WEAPON_SLING } from "../equipments"
-import { KINDRED_TYPE_DEMI_FEY, KINDRED_TYPE_FEY } from "../kindreds"
-import { d4 } from "../dices"
+import { COMBAT_APTITUDE_NON_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_NONE, WEAPON_CLUB, WEAPON_DAGGER, WEAPON_SLING } from "@/libs/equipments"
+import { KINDRED_TYPE_DEMI_FEY, KINDRED_TYPE_FEY } from "@/libs/dolmenwood/kindreds"
+import { d4 } from "@/libs/dices"
 import { CLASS_FRIAR, Class, FRIAR_PRIME_ABILITIES } from "."
 
 export class Friar extends Class {

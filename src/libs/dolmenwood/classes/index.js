@@ -1,7 +1,7 @@
-import { CHA, CON, DEX, INT, STR, WIS } from "../abilities"
-import { d20, rollFromTable } from "../dices"
-import { KINDRED_BREGGLE, KINDRED_ELF, KINDRED_GRIMALKIN, KINDRED_HUMAN, KINDRED_MOSSLING, KINDRED_WOODGRUE } from "../kindreds"
-import { getPrimeAbilitiesXPModifier } from "../modifiers"
+import { CHA, CON, DEX, INT, STR, WIS } from "@/libs/abilities"
+import { d20, rollFromTable } from "@/libs/dices"
+import { KINDRED_BREGGLE, KINDRED_ELF, KINDRED_GRIMALKIN, KINDRED_HUMAN, KINDRED_MOSSLING, KINDRED_WOODGRUE } from "@/libs/dolmenwood/kindreds"
+import { getPrimeAbilitiesXPModifier } from "@/libs/modifiers"
 
 export const CLASS_BARD = "Bard"
 export const CLASS_CLERIC = "Cleric"

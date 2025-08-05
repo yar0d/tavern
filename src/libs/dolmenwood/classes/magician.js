@@ -1,6 +1,6 @@
-import { COMBAT_APTITUDE_NON_MARTIAL } from "../abilities"
-import { ARMOUR_NONE, WEAPON_DAGGER, WEAPON_STAFF } from "../equipments"
-import { d4 } from "../dices"
+import { COMBAT_APTITUDE_NON_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_NONE, WEAPON_DAGGER, WEAPON_STAFF } from "@/libs/equipments"
+import { d4 } from "@/libs/dices"
 import { CLASS_MAGICIAN, Class, MAGICIAN_PRIME_ABILITIES } from "."
 
 export class Magician extends Class {

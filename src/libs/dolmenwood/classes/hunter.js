@@ -1,6 +1,6 @@
-import { COMBAT_APTITUDE_MARTIAL } from "../abilities"
-import { ARMOUR_LIGHT, SHIELD_ANY, WEAPON_ANY } from "../equipments"
-import { d8 } from "../dices"
+import { COMBAT_APTITUDE_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_LIGHT, SHIELD_ANY, WEAPON_ANY } from "@/libs/equipments"
+import { d8 } from "@/libs/dices"
 import { CLASS_HUNTER, Class, HUNTER_PRIME_ABILITIES } from "."
 
 export class Hunter extends Class {

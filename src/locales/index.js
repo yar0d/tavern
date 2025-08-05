@@ -16,7 +16,21 @@ import mossling_en_US from "./mossling_en-US"
 import mossling_fr_FR from "./mossling_fr-FR"
 import woodgrue_en_US from "./woodgrue_en-US"
 import woodgrue_fr_FR from "./woodgrue_fr-FR"
-import { KINDRED_BREGGLE, KINDRED_ELF, KINDRED_GRIMALKIN, KINDRED_HUMAN, KINDRED_MOSSLING, KINDRED_WOODGRUE } from "@/libs/kindreds"
+import { KINDRED_BREGGLE, KINDRED_ELF, KINDRED_GRIMALKIN, KINDRED_HUMAN, KINDRED_MOSSLING, KINDRED_WOODGRUE } from "@/libs/dolmenwood/kindreds"
+
+export const LOCALE_DEFAULT = "en-US"
+export const LOCALE_FALLBACK = "en-US"
+
+export const LOCALES_COUNTRIES = {
+  "en-US": "us",
+  "fr-FR": "fr",
+}
+export const LOCALE_DEFAULT_COUNTRY = LOCALES_COUNTRIES[LOCALE_DEFAULT]
+
+export const LOCALE_NAMES = {
+  "en-US": "English",
+  "fr-FR": "Français",
+}
 
 export default {
   "en-US": {

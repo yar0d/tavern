@@ -1,10 +1,10 @@
 <template>
-  <Icon icon="fluent:more-vertical-32-regular" v-bind="$attrs" />
+  <Icon icon="fluent:dismiss-32-regular" v-bind="$attrs" />
 </template>
 
 <script>
 export default {
-  name: "IconMore",
+  name: "IconClose",
   data () { return {} },
 }
 </script>

@@ -1,7 +1,7 @@
 /* eslint quotes: ["error", "double"] */
 
-import { Dices, d100, d20, rollFromObject, rollFromTable } from "../dices"
-import { CAPRICE, GAFFE, SURNAME, WOLDISH } from "../languages"
+import { Dices, d100, d20, rollFromObject, rollFromTable } from "@/libs/dices"
+import { CAPRICE, GAFFE, SURNAME, WOLDISH } from "@/libs/dolmenwood/languages"
 import { GENDER_FEMALE, GENDER_MALE, GENDER_UNISEX, KINDRED_BREGGLE, KINDRED_HEIGHT_MEDIUM, KINDRED_TYPE_MORTAL, Kindred } from "."
 
 import NAMES from "@/locales/breggle_en-US"

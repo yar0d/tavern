@@ -1,7 +1,7 @@
-import { COMBAT_APTITUDE_SEMI_MARTIAL } from "../abilities"
-import { ARMOUR_ANY, SHIELD_ANY, WEAPON_ANY } from "../equipments"
-import { KINDRED_TYPE_DEMI_FEY, KINDRED_TYPE_FEY } from "../kindreds"
-import { d6 } from "../dices"
+import { COMBAT_APTITUDE_SEMI_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_ANY, SHIELD_ANY, WEAPON_ANY } from "@/libs/equipments"
+import { KINDRED_TYPE_DEMI_FEY, KINDRED_TYPE_FEY } from "@/libs/dolmenwood/kindreds"
+import { d6 } from "@/libs/dices"
 import { CLASS_CLERIC, CLERIC_PRIME_ABILITIES, Class } from "."
 
 export class Cleric extends Class {

@@ -4,18 +4,20 @@ import { createPinia } from "pinia"
 
 import "./style.css"
 import App from "./App.vue"
-import messages from "./locales"
+import messages, { LOCALE_DEFAULT, LOCALE_FALLBACK } from "./locales"
 import { datetimeFormats, numberFormats } from "./locales/formats"
 
 import { Icon } from "@iconify/vue"
 
 import dui from "./components/index"
 
+console.log(messages)
+
 const i18n = createI18n({
   // something vue-i18n options here ...
   legacy: false,
-  locale: "fr-FR",
-  fallbackLocale: "en-US",
+  locale: LOCALE_DEFAULT,
+  fallbackLocale: LOCALE_FALLBACK,
   messages,
   datetimeFormats,
   numberFormats,

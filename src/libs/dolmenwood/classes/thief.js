@@ -1,6 +1,6 @@
-import { COMBAT_APTITUDE_SEMI_MARTIAL } from "../abilities"
-import { ARMOUR_LIGHT, SHIELD_NONE, WEAPON_MEDIUM, WEAPON_SMALL } from "../equipments"
-import { d4 } from "../dices"
+import { COMBAT_APTITUDE_SEMI_MARTIAL } from "@/libs/abilities"
+import { ARMOUR_LIGHT, SHIELD_NONE, WEAPON_MEDIUM, WEAPON_SMALL } from "@/libs/equipments"
+import { d4 } from "@/libs/dices"
 import { CLASS_THIEF, Class, THIEF_PRIME_ABILITIES } from "."
 
 export class Thief extends Class {

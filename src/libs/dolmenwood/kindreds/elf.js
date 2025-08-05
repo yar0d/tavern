@@ -1,5 +1,5 @@
-import { Dices, d100, d20, rollFromObject, rollFromTable } from "../dices"
-import { CAPRICE, ELF_NAME_COURTLY, ELF_NAME_RUSTIC, GAFFE, WOLDISH } from "../languages"
+import { Dices, d100, d20, rollFromObject, rollFromTable } from "../../dices"
+import { CAPRICE, ELF_NAME_COURTLY, ELF_NAME_RUSTIC, GAFFE, WOLDISH } from "@/libs/dolmenwood/languages"
 import { KINDRED_ELF, KINDRED_HEIGHT_MEDIUM, KINDRED_TYPE_FEY, Kindred } from "."
 
 import NAMES from "@/locales/elf_en-US"
