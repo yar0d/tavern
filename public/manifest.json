@@ -1,7 +1,7 @@
 {
   "author": "Yar0d",
   "name": "OSR Tavern",
-  "short_name": "Tavern",
+  "short_name": "OSR Tavern",
   "description": "A companion app for players of OSR role playing games. You have a library to store all your characters from OSR and Dolmenwood. You can also roll dices, takes some notes and solo gaming too!",
   "icons": [{
     "src": "/assets/icons/Square30x30Logo.png",

@@ -4,6 +4,8 @@ import _forEach from "lodash-es/forEach"
 import _isArray from "lodash-es/isArray"
 import _isObject from "lodash-es/isObject"
 
+export const TYPE_DICE = "dice"
+
 export const useHistoryStore = defineStore("history", {
   state: () => ({
     items: [],
@@ -22,7 +24,7 @@ export const useHistoryStore = defineStore("history", {
       })
     },
     addDiceRoll (results) {
-      this.add(results, { text: this.$t("Rolled {notation}= {total}", { ...results, type: this.TYPE_DICE }) })
+      this.add(results, { text: this.$t("Rolled {notation}= {total}", { ...results }), type: TYPE_DICE })
     },
     addInfo (items) {
       this.add(items, { info: true })

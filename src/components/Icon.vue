@@ -1,5 +1,5 @@
 <template>
-  <Icon icon="fluent:question-32-regular" height="32" width="32" v-bind="$attrs" />
+  <Icon icon="fluent:question-32-regular" v-bind="$attrs" />
 </template>
 
 <script>

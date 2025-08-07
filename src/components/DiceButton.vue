@@ -1,5 +1,7 @@
 <template>
-  <Icon :icon="`${icon}`" :class="cls" v-bind="$attrs" />
+  <div class="tooltip tooltip-bottom" :data-tip="`d${faces}`">
+    <Icon :icon="`${icon}`" :class="cls" v-bind="$attrs" />
+  </div>
 </template>
 
 <script>
@@ -9,8 +11,7 @@ export default {
     color: { type: String, default: "text-primary-content" },
     disabled: { type: Boolean, default: false },
     faces: { type: [Number, String], default: 9 },
-    formula: { type: String, default: "d20" },
-    size: { type: String, default: "3xl" },
+    size: { type: String, default: "6xl" },
   },
   emits: ["roll-begin", "roll-end"],
   data () {
@@ -44,3 +45,4 @@ export default {
   },
 }
 </script>
+^

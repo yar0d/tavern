@@ -1,13 +1,13 @@
 <template>
-  <fieldset class="fieldset">
+  <fieldset class="fieldset w-16">
     <legend v-if="label" class="fieldset-legend">{{ label }}</legend>
-    <input v-model="value" type="text" class="input bg-base-100" required :placeholder="placeholder" list="modifiers" />
+    <input v-model="value" type="text" class="input bg-base-100" required :placeholder="$t('Modifier')" list="modifiers" />
     <datalist id="modifiers">
       <option value="-4"></option>
       <option value="-3"></option>
       <option value="-2"></option>
       <option value="-1"></option>
-      <option value="0"></option>
+      <option value=""></option>
       <option value="+1"></option>
       <option value="+2"></option>
       <option value="+3"></option>
@@ -30,7 +30,6 @@ export default {
     appendButton: { type: String, default: "" },
     help: { type: String, default: "" },
     label: { type: String, default: "" },
-    placeholder: { type: String, default: "" },
     modelValue: { type: String, required: true },
   },
   emits: ["update:modelValue", "click"],
@@ -39,12 +38,12 @@ export default {
   },
   computed: {
     valid () {
-      return /^[+-]?\d$/.test(this.value)
+      return !this.value || /^[+-]?\d$/.test(this.value)
       // return /[+-]?\d{1, 1}/g.test(this.value)
     },
     value: {
       get () {
-        return this.modelValue || "0"
+        return this.modelValue
       },
       set (value) {
         const v = value > 0 ? `+${value}` : value

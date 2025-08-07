@@ -6,8 +6,7 @@ import { BaseDirectory, exists, readTextFile, writeTextFile } from "@tauri-apps/
 
 import storage from "@/libs/storage"
 import { THEME_DARK, THEME_LIGHT } from "@/libs/themes"
-import { LOCALES_COUNTRIES, LOCALE_DEFAULT, LOCALE_DEFAULT_COUNTRY } from "@/locales"
-import { LOCALE_NAMES } from "../locales"
+import { LOCALES_COUNTRIES, LOCALE_DEFAULT, LOCALE_DEFAULT_COUNTRY, LOCALE_NAMES } from "@/locales"
 
 const CONFIG_FILE_VERSION = 1
 const CONFIG_FILE_NAME = "app-conf.json"
@@ -24,6 +23,7 @@ const HISTORY_FILE_NAME = "history.json"
 export const useAppStore = defineStore("app", {
   state: () => ({
     _config: {},
+    _language: LOCALE_DEFAULT,
     _themeConfig: {
       dark: false,
       theme: THEME_DARK,
@@ -32,19 +32,20 @@ export const useAppStore = defineStore("app", {
     baseDir: null,
     country: null,
     documentDir: null,
-    language: null,
     pathNameConfig: CONFIG_FILE_NAME,
     pathNameHistory: HISTORY_FILE_NAME,
     standAlone: false,
   }),
   getters: {
-    applicationName: (state) => state.appName,
+    applicationName: (state) => state.appName || "OSE Tavern",
     config (state) { return state._config},
+    language (state) { return state._language},
     prefersDarkTheme () {
       const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)")
       return prefersDarkTheme?.matches
     },
     themeConfig (state) { return state._themeConfig},
+    themeIsDark (state) { state._themeConfig.dark },
   },
   actions: {
     async applyTheme () {
@@ -57,17 +58,19 @@ export const useAppStore = defineStore("app", {
       }
       this.saveTheme(this._themeConfig)
     },
-    async init () {
+    async init (app) {
       const messages = []
 
+      const navLang = navigator.language || navigator.userLanguage
+      this.country = LOCALES_COUNTRIES[navLang] || LOCALE_DEFAULT_COUNTRY
+      this._language = LOCALE_NAMES[navLang] ? navLang : LOCALE_DEFAULT
+
+      // eslint-disable-next-line no-console
+      console.log(`[app] Language ${this.country} / ${this._language}.`)
+
+      app.$root.$i18n.locale = this._language
+
       try {
-        const navLang = navigator.language || navigator.userLanguage
-        this.country = LOCALES_COUNTRIES[navLang] || LOCALE_DEFAULT_COUNTRY
-        this.language = LOCALE_NAMES[navLang] ? navLang : LOCALE_DEFAULT
-
-        // eslint-disable-next-line no-console
-        console.log(`[app] Language ${this.country} / ${this.language}.`)
-
         this.appName = await getName()
         this.baseDir = BaseDirectory.AppData
         this.documentDir = await path.appDataDir()
@@ -81,14 +84,9 @@ export const useAppStore = defineStore("app", {
         // } else
         messages.push(`[app] Using documents directory ${this.documentDir}.`)
 
-        // this.pathNameConfig = await path.join(this.appName, CONFIG_FILE_NAME)
-        // this.pathNameHistory = await path.join(this.appName, HISTORY_FILE_NAME)
+        this.pathNameConfig = await path.join(this.appName, CONFIG_FILE_NAME)
+        this.pathNameHistory = await path.join(this.appName, HISTORY_FILE_NAME)
 
-        await this.loadConfig()
-        this.applyTheme()
-
-        messages.push(`[app] History is saved in ${this.pathNameHistory}.`)
-        messages.push("[app] Initialized as Tauri app.")
         this.standAlone = true
       } catch (error) {
         this.standAlone = false
@@ -96,6 +94,12 @@ export const useAppStore = defineStore("app", {
         messages.push(error)
         messages.push("[app] Failed initializing as Tauri app!")
       }
+
+      await this.loadConfig()
+      this.applyTheme()
+
+      messages.push(`[app] History is saved in ${this.pathNameHistory}.`)
+      messages.push("[app] Initialized as Tauri app.")
       return messages
     },
     async loadConfig () {
@@ -112,7 +116,7 @@ export const useAppStore = defineStore("app", {
           this._config = JSON.parse(newConfig || "{}")
         }
 
-        if (this._config.language) this.language = this._config.language
+        if (this._config.language) this._language = this._config.language
 
         return this._config
       } catch (error) {

@@ -77,7 +77,7 @@ export default {
       // Fill in all inputs
       if (this.value?.name) {
         // this.form.getTextField("Name")?.setText(this.value.name)
-        console.log('## settings name:', this.value.name)
+        console.log("## settings name:", this.value.name)
         this.fields["Name"]?.setText(this.value.name)
       }
       /*

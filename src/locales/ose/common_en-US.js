@@ -1,0 +1,16 @@
+export default {
+  "OSE": "OSE",
+  "Old School Essentials": "Old School Essentials",
+  "Cleric": "Cleric",
+  "Fighter": "Fighter",
+  "Knight": "Knight",
+  "Magician": "Magician",
+  "Thief": "Thief",
+  "Elf": "Elf",
+  "Dwarf": "DwarfGrimalkin",
+  "Human": "Human",
+  "Halfling": "Halfling",
+  "Common": "Common",
+  "Race": "Race",
+  "Choose a Race": "Choose a Race",
+}
