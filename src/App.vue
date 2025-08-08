@@ -32,7 +32,10 @@
       </div>
 
       <div class="items-start">
-        <button class="btn" @click="createCharacter">{{ $t('Create a character') }}</button>
+        <button class="btn btn-primary" @click="createCharacter">
+          <dui-icon icon="game-icons:character" />
+          {{ $t('Create a character') }}
+        </button>
       </div>
 
       <dui-history />
@@ -162,7 +165,7 @@ export default {
           console.log("[dice] initialized.")
         })
         .catch((error) => {
-          console.error("[error] dice initialize" , error)
+          console.error("[error] dice initialize", error)
           this.notifyStore.error(error)
         })
         .finally(() => {

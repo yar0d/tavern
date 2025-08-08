@@ -45,7 +45,9 @@ export default {
     },
   },
   mounted () {
-    this.changeLocale(this.appStore.language)
+    this.$nextTick(() => {
+      this.changeLocale(this.appStore.language)
+    })
   },
   methods: {
     changeLocale (newLocale) {

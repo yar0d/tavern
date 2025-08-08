@@ -6,16 +6,33 @@
       <dui-icon icon="game-icons:rule-book" class="text-2xl mx-1" />
       {{ $t('Rules') }}
     </label>
-    <div class="tab-content bg-base-100 border-base-300 p-6">
-      <div v-for="(rs, name) in RULESETS" :key="rs.id" class="card bg-base-100 w-auto shadow-sm" >
-        <div class="card-body">
-          <div class="card-title flex bg-accent">
-            {{ name }}
-          </div>
+    <div class="tab-content border-base-300 p-6">
+      <div role="alert" class="alert">
+        <dui-icon icon="game-icons:rule-book" class="text-2xl stroke-info text-info" />
+        <span>{{ $t('Choose the ruleset you want to use to create your character.') }}</span>
+      </div>
 
-          <div v-if="rs.extensions?.length">
-            <div>Extensiom {{ rs.extensions.id }}</div>
-          </div>
+      <div class="card-body">
+        <div class="card-title">
+          {{ $t('Rules') }}
+        </div>
+
+        <div class="join">
+          <dui-radio-input v-for="(rs, name) in RULESETS" :key="rs.id" v-model="rulesetId" :value="name" name="radio-ruleset" class="join-item btn" :aria-label="name" />
+        </div>
+      </div>
+
+      <div v-if="ruleset?.extensions?.length" class="ml-8">
+        <div class="card-title">{{ $t('Extensions') }}</div>
+
+        <div class="flex flex-wrap">
+          <fieldset v-for="extension in ruleset.extensions" :key="extension.id" class="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+            <img v-if="extension.cover" :src="`/assets/covers/${extension.cover}`" class="w-40" />
+            <label class="label">
+              <input type="checkbox" :value="extension.id" class="toggle" />
+              {{ extension.id }}
+            </label>
+          </fieldset>
         </div>
       </div>
     </div>
@@ -35,7 +52,7 @@
             <dui-icon-close @click="close" />
             {{ pc?.name }} {{ pc?.surname }}
 
-            <a v-if="ruleset.srd" :href="ruleset.srd" target="_srd">
+            <a v-if="ruleset?.srd" :href="ruleset.srd" target="_srd">
               ({{ $t('SRD') }})
             </a>
           </div>
@@ -62,6 +79,7 @@ export default {
       RULESETS,
       pc: null,
       ruleset: null,
+      rulesetId: null,
       uuid: randomUUID,
     }
   },
@@ -70,7 +88,12 @@ export default {
       return ""
     },
   },
-  watch: {},
+  watch: {
+    rulesetId (newValue, oldValue) {
+      if (newValue!==oldValue)
+        this.ruleset = RULESETS?.[newValue]
+    },
+  },
   created () {},
   beforeUnmount () {},
   mounted () {},

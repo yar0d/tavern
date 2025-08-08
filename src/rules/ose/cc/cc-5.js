@@ -1,6 +1,6 @@
 export default {
-  id: "Carcass Crawler #1",
-  cover: "cc1.jpg",
+  id: "Carcass Crawler #5",
+  cover: "cc5.jpg",
   classes: [],
   races: [],
   skills: [],
