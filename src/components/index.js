@@ -10,12 +10,17 @@
 
 import kebabCase from "lodash-es/kebabCase"
 
+import registerDirectives from "./directives"
+
 export const COMPONENT_PREFIX = "dui" // Daisy UI
 
 export default {
   COMPONENT_PREFIX,
   register: async (app) => {
-    const modules = import.meta.glob("./*.vue")
+    // Directives
+    registerDirectives(app)
+
+    const modules = import.meta.glob("./**/*.vue")
     if (import.meta.env !== "production")
       console.log(`[${COMPONENT_PREFIX}] Registering ${Object.keys(modules).length} components...`)
 

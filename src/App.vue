@@ -1,6 +1,5 @@
 <template>
   <div v-show="isRolling" id="dice-box" class="dice3d-canvas w-screen h-dvh" />
-
   <div class="toast toast-center toast-top">
     <div v-for="(notification, index) in notifications" :key="index" class="opacity-90" role="alert" :class="NOTIFICATION_CLASSES[notification.type]">
       <span>{{ notification.message }}</span>
@@ -13,22 +12,25 @@
     <div class="bg-base-300 text-base-content items-stretch flex flex-col md:w-1/3 blurred-contrast" dark>
       <div class="bg-base-100 text-base-content flex items-center text-xl flex ">
         <dui-icon icon="game-icons:tavern-sign" class="text-warning text-2xl mx-2" />
-        <div class="mx-2 capitalize font-bold">
+        <div class="mx-2 w-full capitalize font-bold">
           {{ $t(applicationName) }}
         </div>
 
         <!-- <dui-theme-switcher class="mx-1" @change="changeTheme" /> -->
         <dui-language-input />
+      </div>
 
-        <div v-if="diceBoxReady" class="ml-auto mr-1">
-          <dui-dice-button faces="4" :width="32" :disabled="isRolling" @click="roll('1d4')" />
-          <dui-dice-button faces="6" :width="32" :disabled="isRolling" @click="roll('1d6')" />
-          <dui-dice-button faces="8" :width="32" :disabled="isRolling" @click="roll('1d8')" />
-          <dui-dice-button faces="10" :width="32" :disabled="isRolling" @click="roll('1d10')" />
-          <dui-dice-button faces="12" :width="32" :disabled="isRolling" @click="roll('1d12')" />
-          <dui-dice-button faces="20" :width="32" :disabled="isRolling" @click="roll('1d20')" />
+      <div class="w-full flex items-center">
+        <dui-integer-input v-model="diceNumber" :min="1" :max="50" width="w-12" />
+        <div class="px-1">
+          <dui-dice-button faces="4" :disabled="!diceSystemReady || isRolling" @click="roll('d4')" />
+          <dui-dice-button faces="6" :disabled="!diceSystemReady || isRolling" @click="roll('d6')" />
+          <dui-dice-button faces="8" :disabled="!diceSystemReady || isRolling" @click="roll('d8')" />
+          <dui-dice-button faces="10" :disabled="!diceSystemReady || isRolling" @click="roll('d10')" />
+          <dui-dice-button faces="12" :disabled="!diceSystemReady || isRolling" @click="roll('d12')" />
+          <dui-dice-button faces="20" :disabled="!diceSystemReady || isRolling" @click="roll('d20')" />
         </div>
-        <dui-modifier-input v-model="modifier" />
+        <dui-modifier-input v-model="diceModifier" />
       </div>
 
       <div class="items-start">
@@ -74,6 +76,8 @@ import { useHistoryStore } from "@/stores/history"
 import useNotifyStore, { NOTIFICATION_CLASSES } from "@/stores/notifications"
 
 import { register } from "@/rules"
+import { NO_MODIFIER } from "./rules/modifiers"
+import { rollCustom } from "./libs/dices"
 
 let box = null
 
@@ -84,13 +88,15 @@ export default {
     return {
       NOTIFICATION_CLASSES,
       characters: [],
-      diceBoxReady: false,
+      dice3DAvailable: false,
       diceCanvasResizeHandler: null,
+      diceModifier: NO_MODIFIER,
+      diceNumber: 1,
+      diceSystemReady: false,
       error: null,
-      formula: "1d100+1d10",
+      formula: "",
       favoriteFormula: [],
       isRolling: true, // Mandatory to initialise 3D context
-      modifier: "",
     }
   },
   computed: {
@@ -134,6 +140,11 @@ export default {
     createCharacter () {
       this.characters.push({})
     },
+    historizeRoll (roll) {
+      console.warn("## historizeRoll", roll)
+      this.historyStore.addDiceRoll(roll)
+      this.notifyStore.info(this.$t("Rolled {notation}= {total}", { ...roll }))
+    },
     initDiceBox () {
       this.isRolling = true
 
@@ -154,23 +165,24 @@ export default {
         baseScale: 50,
         strength: 1, // toss strength of dice
         onRollComplete: (results) => {
-          this.historyStore.addDiceRoll(results)
-          this.notifyStore.info(this.$t("Rolled {notation}= {total}", { ...results }))
+          this.historizeRoll(results)
         },
       })
 
       box.initialize()
         .then(() => {
+          this.dice3DAvailable = true
           // eslint-disable-next-line no-console
-          console.log("[dice] initialized.")
+          console.log("[dice] 3D initialized.")
         })
         .catch((error) => {
+          this.dice3DAvailable = false
           console.error("[error] dice initialize", error)
           this.notifyStore.error(error)
         })
         .finally(() => {
           this.isRolling = false
-          this.diceBoxReady = true
+          this.diceSystemReady = true
         })
 
       // await box.initialize()
@@ -184,18 +196,27 @@ export default {
       //   .catch((e) => console.error(e))
       this.notifyStore.info(this.$t("Welcome to the OSR Tavern!"))
     },
-    roll (formula) {
+    roll (dice) {
       this.isRolling = true
-      this.$nextTick(() => {
-        box.roll(`${formula}${this.modifier || ""}`)
-          .catch ((error) => {
-            console.error(`[error] roll ${formula}`, error)
-            this.notifyStore.error(error)
-          })
-          .finally(() => {
-            setTimeout(() => {this.isRolling = false}, 250)
-          })
-      })
+      this.formula = `${this.diceNumber || 1}${dice}${this.diceModifier || ""}`
+
+      if (this.dice3DAvailable) {
+        // 3D is available :)
+        this.$nextTick(() => {
+          box.roll(this.formula)
+            .catch ((error) => {
+              console.error(`[error] roll ${dice}`, error)
+              this.notifyStore.error(error)
+            })
+            .finally(() => {
+              setTimeout(() => {this.isRolling = false}, 250)
+            })
+        })
+      } else {
+        // Fallback if no 3D is available
+        this.historizeRoll(rollCustom(this.formula))
+        setTimeout(() => {this.isRolling = false}, 250)
+      }
     },
     rollFormula (formula) {
       if (!this.favoriteFormula.includes(formula))

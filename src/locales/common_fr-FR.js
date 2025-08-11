@@ -60,4 +60,8 @@ export default {
   "Rules": "Règles",
   "SRD": "Règles in ligne",
   "Create a character": "Créer un personnage",
+  "Number of dices": "Nombre de dés",
+  "Search...": "Rechercher…",
+  "Less details": "Moins de détails",
+  "More details": "Plus de détails",
 }

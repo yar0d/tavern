@@ -60,4 +60,8 @@ export default {
   "Rules": "Rules",
   "SRD": "Online Rules References",
   "Create a character": "Create a character",
+  "Number of dices": "Number of dices",
+  "Search...": "Search...",
+  "Less details": "Less details",
+  "More details": "More details",
 }

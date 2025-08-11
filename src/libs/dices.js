@@ -32,13 +32,13 @@ function sum (dices) {
 * ```
 *
 * **Attributes**:
-* - total: The result of dices that were rolled.
 * - dices: Array that contains each dice rolled.
-* - dice: The dice that was asked for.
-* - number: The number of dices that was rolled.
 * - faces: The number of faces of the dices rolled.
 * - modifier: The modifier that number of faces of the dices rolled.
+* - notation: The dice formula that was asked for.
+* - number: The number of dices that was rolled.
 * - post: This is the function that modify the total. It's called with destructured dices attributes. In our example, we called ```Math.min(6, 3)```.
+* - total: The result of dices that were rolled.
 */
 export function rollCustom (formula) {
   let opt = { ...DEFAULT_DICE }
@@ -79,14 +79,37 @@ export function rollCustom (formula) {
   const result = {
     total: 0,
     dices: [],
-    formula,
+    notation: formula,
     ...opt,
   }
+
+  /*
+  * Compatiblity with @3d-dice/dice-box-threejs roll results:
+  { "notation": "3d6", "sets": [ { "num": 3, "type": "d6", "sides": 6, "rolls": [ { "type": "d6", "sides": 6, "id": 0, "value": 5, "label": "5", "reason": "natural" }, { "type": "d6", "sides": 6, "id": 1, "value": 1, "label": "1", "reason": "natural" }, { "type": "d6", "sides": 6, "id": 2, "value": 6, "label": "6", "reason": "natural" } ], "total": 12 } ], "modifier": 0, "total": 12, "text": "Tirage de 3d6 = 12", "type": "dice", "timestamp": "2025-08-11T15:16:17.184Z" }
+   */
+
+  result.sets = [
+    {
+      num: result.number,
+      type: `d${result.faces}`,
+      sides: result.faces,
+      rolls: [],
+    },
+  ]
+
   let d
   for (let i = 0; i < opt.number; i++) {
     d = Math.trunc(Math.random() * opt.faces + 1)
     result.total += d
     result.dices.push(d)
+    result.sets[0].rolls.push({
+      id: i,
+      type: `d${result.faces}`,
+      sides: result.faces,
+      value: d,
+      label: String(d),
+      reason: "natural",
+    })
   }
   // Call post roll processing
   if (typeof opt.post === "function") {
@@ -94,6 +117,8 @@ export function rollCustom (formula) {
   }
   // Add modifier if any
   result.total += opt.modifier
+  result.sets[0].total = result.total
+  result.sets[0].modifier = result.modifier
 
   return result
 }

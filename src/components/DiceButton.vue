@@ -1,6 +1,7 @@
 <template>
-  <div class="tooltip tooltip-bottom" :data-tip="`d${faces}`">
-    <Icon :icon="`${icon}`" :class="cls" v-bind="$attrs" />
+  <div class="tooltip tooltip-top" :data-tip="`d${faces}`">
+    <!-- <Icon :icon="`${icon}`" :class="cls" v-bind="$attrs" /> -->
+    <Icon :icon="`${icon}`" :class="cls" :width="32" />
   </div>
 </template>
 
@@ -45,4 +46,3 @@ export default {
   },
 }
 </script>
-^

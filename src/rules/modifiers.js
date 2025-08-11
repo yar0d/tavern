@@ -1,5 +1,7 @@
 import _ from "lodash-es"
 
+export const NO_MODIFIER = ""
+
 export function getAbilityModifier (score) {
   if (score <= 3)
     return -3
